@@ -3,22 +3,21 @@ import { gql } from 'apollo-server';
 export default gql`
 # We extend the User type from the User service.
 # Our gateway only needs a reference to the Type via primary key
-# to enable ALL user data to be resolved from the User service.
+# to enable ALL user data to be resolved.
 extend type User @key(fields: "walletId") {
   walletId: String @external
   }
-type AssetBalance {
-  amount: String
-  value: String
-}
-type CryptoAsset {
-  currency: String
-  balance: AssetBalance,
+# We extend the CryptoAssetData type from the Cryptocurrency service.
+# Our gateway only needs a reference to the CryptoAssetData Type via the "currency" primary key
+# to enable ALL currency data to be resolved
+extend type CryptoAssetData @key(fields: "currency amount") {
+  currency: String @external
+  amount: String @external
 }
 type Wallet {
   walletId: ID!
   user: User
-  assets: [CryptoAsset]
+  assets: [CryptoAssetData]
 }
 type Query {
   getWallets: [Wallet]
